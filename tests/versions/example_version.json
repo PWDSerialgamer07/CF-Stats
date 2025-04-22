@@ -1,0 +1,28 @@
+{
+	"data": [
+		{
+			"id": 0,
+			"gameVersionId": 0,
+			"versionString": "string",
+			"jarDownloadUrl": "string",
+			"jsonDownloadUrl": "string",
+			"approved": true,
+			"dateModified": "2019-08-24T14:15:22Z",
+			"gameVersionTypeId": 0,
+			"gameVersionStatus": 1,
+			"gameVersionTypeStatus": 1
+		},
+		{
+			"id": 1,
+			"gameVersionId": 1,
+			"versionString": "string",
+			"jarDownloadUrl": "string",
+			"jsonDownloadUrl": "string",
+			"approved": true,
+			"dateModified": "2019-08-24T14:15:22Z",
+			"gameVersionTypeId": 0,
+			"gameVersionStatus": 1,
+			"gameVersionTypeStatus": 1
+		}
+	]
+}
