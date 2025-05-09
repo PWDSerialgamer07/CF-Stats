@@ -7,6 +7,7 @@ import sqlite3
 Putting this here so I don't forget:
 Instead it'll be one databse with one table containing each mods and their downloads for each version (and a total column), then another table which is just 
 a mod loader per line with a single columns containing their downloads
+Let's also have a temporary table to store mod urls before we parse throug each of them, or instead a different database with tables for each loaders? I'm not sure
 
 Curseforge's fuck ass api only offers per mod statistics so I'm going to have to make a lot of request
 Let's hope I don't instantly get rate limited or have my api key revoked
@@ -53,6 +54,10 @@ def create_db(db_path: str = 'mods.sqlite3', version_list: list = []):
     CREATE TABLE IF NOT EXISTS Mod_Loaders (
         name TEXT PRIMARY KEY,
         downloads INTEGER
+    );
+    CREATE TABLE IF NOT EXISTS Mod_Urls (
+        mod_id INTEGER,
+        name TEXT
     )
     ''')  # Should create a column for each versions available in the mod table, also we're not getting per version downloads for the mod loaders
     conn.commit()
@@ -82,6 +87,14 @@ def insert_mod(conn, mod_data: dict, version_list: list):
             mod_data[i] = 0
     # Now, how will I add those values to the database? I have no idea so TODO: Find a way to add them to the database
 
+    conn.commit()
+
+
+def insert_temp_mod(conn, mod_name: str, mod_id: int):
+    cur = conn.cursor()
+    cur.execute('''
+    INSERT INTO Mod_Urls (id, name) VALUES (?, ?)
+    ''', (mod_id, mod_name))
     conn.commit()
 
 
@@ -133,5 +146,12 @@ def main():
                 }, headers=headers)
                 mods_raw = mods_raw.json()
                 index += 50
+                for item in mods_raw['data']:
+                    if item['downloadCount'] <= 1000:
+                        continue
+                    id = item['id']
+                    name = item['name']
+                    insert_temp_mod(con, name, id)
+
                 if mods_raw["pagination"]["resultCount"] == 0:
                     break
